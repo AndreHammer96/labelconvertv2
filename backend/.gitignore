@@ -1,0 +1,24 @@
+# Arquivos e pastas que o Git deve ignorar
+
+# Pastas temporárias / IDE
+__pycache__/
+.vscode/
+.idea/
+
+# Arquivos temporários
+*.log
+*.tmp
+
+# Ambientes virtuais
+venv/
+.env/
+.venv/
+
+# Uploads locais
+backend/uploads/
+
+# Arquivos de cache
+*.pyc
+
+# NÃO IGNORAR o frontend!
+# frontend/
