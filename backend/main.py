@@ -6,7 +6,10 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
-from label_generator import generate_combined_pdf
+from backend.label_generator import generate_combined_pdf
+from backend.label_matcher import match_pdf_with_excel
+
+
 
 app = FastAPI(title="Conversor de Etiquetas Shopee")
 
