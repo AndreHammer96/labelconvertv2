@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversor de Etiquetas Shopee</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 380px;
+    }
+    input[type="file"] {
+      margin: 10px 0;
+      width: 100%;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #status {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Conversor de Etiquetas</h2>
+    <form id="uploadForm">
+      <input type="file" name="pdf" accept="application/pdf" required />
+      <input type="file" name="xlsx" accept=".xlsx" required />
+      <button type="submit">Converter e Baixar</button>
+    </form>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      status.textContent = "⏳ Gerando etiquetas, aguarde...";
+
+      try {
+        const response = await fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Erro ao processar.");
+
+        // baixa o PDF final
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "etiquetas_final.pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        status.textContent = "✅ Arquivo gerado com sucesso!";
+      } catch (err) {
+        status.textContent = "❌ Erro ao gerar etiquetas.";
+      }
+    });
+  </script>
+</body>
+</html>
