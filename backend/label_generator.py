@@ -7,7 +7,7 @@ from reportlab.lib.pagesizes import mm
 from reportlab.lib.colors import black, white
 from io import BytesIO
 from pathlib import Path
-from label_matcher import match_pdf_with_excel, extract_products_from_excel
+from backend.label_matcher import match_pdf_with_excel, extract_products_from_excel
 
 DEBUG = True
 
