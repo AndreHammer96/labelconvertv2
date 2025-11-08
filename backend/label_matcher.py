@@ -50,9 +50,9 @@ def extract_products_from_excel(xlsx_path: Path):
         order_sn = str(row.get("order_sn", "")).strip()
         info = str(row.get("product_info", ""))
 
-        name_match = re.search(r"Product Name:\s*(.*?)(;|$)", info, flags=re.IGNORECASE)
+        name_match = re.search(r"Parent SKU Reference No.:\s*(.*?)(;|$)", info, flags=re.IGNORECASE)
         if not name_match:
-            name_match = re.search(r"Name:\s*(.*?)(;|$)", info, flags=re.IGNORECASE)
+            name_match = re.search(r"Reference No.:\s*(.*?)(;|$)", info, flags=re.IGNORECASE)
 
         qty_match = re.search(r"Quantity:\s*(\d+)", info, flags=re.IGNORECASE)
 
