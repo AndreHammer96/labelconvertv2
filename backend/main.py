@@ -17,7 +17,22 @@ app = FastAPI(title="Conversor de Etiquetas Shopee")
 
 BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_DIR = BASE_DIR / "uploads"
-TEMPLATE_DIR = BASE_DIR.parent / "frontend"
+
+# Detecta automaticamente o caminho correto do frontend
+possible_paths = [
+    BASE_DIR / "frontend",
+    BASE_DIR.parent / "frontend",
+    Path("/app/frontend"),  # caminho usado no Railway
+]
+for p in possible_paths:
+    if (p / "index.html").exists():
+        TEMPLATE_DIR = p
+        break
+else:
+    TEMPLATE_DIR = BASE_DIR  # fallback
+
+print(f"🧭 Usando TEMPLATE_DIR = {TEMPLATE_DIR}")
+
 OUTPUT_FILE = BASE_DIR / "etiquetas_final.pdf"
 
 UPLOAD_DIR.mkdir(exist_ok=True)
