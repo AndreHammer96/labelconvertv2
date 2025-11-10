@@ -3,89 +3,163 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Conversor de Etiquetas Shopee</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #fafafa;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .container {
-      background: #fff;
-      padding: 30px 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      text-align: center;
-      width: 380px;
-    }
-    input[type="file"] {
-      margin: 10px 0;
-      width: 100%;
-    }
-    button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 16px;
-      border-radius: 5px;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    #status {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #333;
-    }
-  </style>
+  <title>LabelConvert — Automação de Etiquetas Inteligente</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
+
 <body>
-  <div class="container">
-    <h2>Conversor de Etiquetas</h2>
-    <form id="uploadForm">
-      <input type="file" name="pdf" accept="application/pdf" required />
-      <input type="file" name="xlsx" accept=".xlsx" required />
-      <button type="submit">Converter e Baixar</button>
-    </form>
-    <p id="status"></p>
-  </div>
+
+  <header class="navbar">
+    <div class="logo">🧾 LabelConvert</div>
+    <nav>
+      <a href="#recursos">Recursos</a>
+      <a href="#beneficios">Benefícios</a>
+      <a href="#planos">Planos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+	<button class="btn-start" onclick="window.location.href='/login'">Entrar</button>
+	<button class="test-button" onclick="window.location.href='/teste'">🧾</button>
+
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Transforme sua <span class="highlight">Impressão de Etiquetas</span> em Minutos</h1>
+      <p>
+        Com o <strong>LabelConvert</strong>, você envia seu PDF e planilha e recebe automaticamente suas etiquetas
+        prontas para impressão — rápido, prático e profissional.
+      </p>
+      <button class="btn-primary" onclick="window.location.href='/register'">Começar Agora</button>
+    </div>
+    <div class="hero-image">
+      <img src="static/logo.png" alt="Etiqueta digital" />
+    </div>
+  </section>
+
+  <!-- RECURSOS -->
+  <section id="recursos" class="features">
+    <h2>Recursos Poderosos</h2>
+    <div class="features-grid">
+      <div class="feature">
+        <h3>⚙️ Conversão Automática</h3>
+        <p>Combine PDFs e planilhas em segundos com inteligência de correspondência automática.</p>
+      </div>
+      <div class="feature">
+        <h3>📦 Geração em Massa</h3>
+        <p>Produza centenas de etiquetas em um clique com layout padronizado 10x15cm.</p>
+      </div>
+      <div class="feature">
+        <h3>☁️ 100% Online</h3>
+        <p>Sem instalações, sem complicações. Acesse de qualquer lugar, a qualquer hora.</p>
+      </div>
+      <div class="feature">
+        <h3>🧠 Inteligência de Correspondência</h3>
+        <p>Reconhecimento automático de produtos e quantidades, mesmo com planilhas diferentes.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFÍCIOS -->
+  <section id="beneficios" class="benefits">
+    <h2>Por que usar o LabelConvert?</h2>
+    <div class="benefits-grid">
+      <div class="benefit">
+        <h3>🚀 Agilidade</h3>
+        <p>Gere suas etiquetas em segundos, economizando horas de trabalho manual.</p>
+      </div>
+      <div class="benefit">
+        <h3>💼 Profissionalismo</h3>
+        <p>Layout padronizado e impressão de alta qualidade — ideal para envios e logística.</p>
+      </div>
+      <div class="benefit">
+        <h3>🔒 Segurança</h3>
+        <p>Arquivos processados de forma privada e segura, sem armazenamento indevido.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section id="planos" class="pricing">
+    <h2>Planos para Cada Necessidade</h2>
+    <p>Escolha o plano ideal para seu negócio. Sem taxas escondidas, cancele quando quiser.</p>
+
+    <div class="pricing-grid">
+      <div class="plan" onclick="selectPlan(this)">
+        <h3>Basic</h3>
+        <p class="price">R$ 29/mês</p>
+        <ul>
+          <li>Até 100 etiquetas/mês</li>
+          <li>Conversão rápida</li>
+          <li>Suporte por e-mail</li>
+        </ul>
+        <button class="btn-outline" onclick="goToRegister(event, this)">Selecionar Plano</button>
+      </div>
+
+      <div class="plan selected" onclick="selectPlan(this)">
+        <h3>Pro</h3>
+        <p class="price">R$ 79/mês</p>
+        <ul>
+          <li>Etiquetas ilimitadas</li>
+          <li>Prioridade no servidor</li>
+          <li>Suporte via WhatsApp</li>
+        </ul>
+        <button class="btn-primary" onclick="goToRegister(event, this)">Plano Selecionado</button>
+      </div>
+
+      <div class="plan" onclick="selectPlan(this)">
+        <h3>Enterprise</h3>
+        <p class="price">R$ 199/mês</p>
+        <ul>
+          <li>Integração com API</li>
+          <li>Conversão paralela</li>
+          <li>Suporte dedicado</li>
+        </ul>
+        <button class="btn-outline" onclick="goToRegister(event, this)">Selecionar Plano</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato" class="contact">
+    <h2>Fale Conosco</h2>
+    <p>Dúvidas? Quer integrar o LabelConvert à sua operação? Fale com nossa equipe!</p>
+
+    <div class="contact-info">
+      <p>📧 contato@labelconvert.com.br</p>
+      <p>💬 WhatsApp: (41) 99999-9999</p>
+    </div>
+  </section>
+
+  <!-- RODAPÉ -->
+	<footer>
+		<p>© 2025 <strong>LabelConvert</strong> — Todos os direitos reservados.</p>
+		<p>Desenvolvido por <span class="footer-icon">⚒️</span> <strong>Hammer</strong></p>
+	</footer>
 
   <script>
-    const form = document.getElementById("uploadForm");
-    const status = document.getElementById("status");
+  function selectPlan(el) {
+      document.querySelectorAll(".plan").forEach((p) => p.classList.remove("selected"));
+      el.classList.add("selected");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      status.textContent = "⏳ Gerando etiquetas, aguarde...";
+      document.querySelectorAll(".plan button").forEach((b) => {
+        b.classList.remove("btn-primary");
+        b.classList.add("btn-outline");
+        b.textContent = "Selecionar Plano";
+      });
 
-      try {
-        const response = await fetch("/upload", {
-          method: "POST",
-          body: formData,
-        });
+      const btn = el.querySelector("button");
+      btn.classList.remove("btn-outline");
+      btn.classList.add("btn-primary");
+      btn.textContent = "Plano Selecionado";
+    }
 
-        if (!response.ok) throw new Error("Erro ao processar.");
+    function goToRegister(event, button) {
+      event.stopPropagation(); // evita que o clique no botão dispare o selectPlan
+      const planName = button.closest(".plan").querySelector("h3").textContent.toLowerCase();
+      window.location.href = `/register?plan=${planName}`;
+    }
+</script>
 
-        // baixa o PDF final
-        const blob = await response.blob();
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "etiquetas_final.pdf";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        status.textContent = "✅ Arquivo gerado com sucesso!";
-      } catch (err) {
-        status.textContent = "❌ Erro ao gerar etiquetas.";
-      }
-    });
-  </script>
 </body>
 </html>

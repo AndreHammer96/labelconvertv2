@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar — LabelConvert</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    body {
+	background: linear-gradient(135deg, #fff8f2, #fff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+    }
+    .login-container {
+      background: #fff;
+      color: #333;
+      padding: 40px;
+      border-radius: 16px;
+      width: 380px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .login-container h1 {
+      color: #ff6b00;
+      margin-bottom: 20px;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .login-container button {
+      background: #ff6b00;
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+      transition: background 0.3s;
+    }
+    .login-container button:hover {
+      background: #e65c00;
+    }
+    .login-container a {
+      color: #ff6b00;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .login-container a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>LabelConvert</h1>
+    <p>Entre com sua conta</p>
+    <form action="/login" method="post">
+      <input type="email" name="email" placeholder="E-mail" required />
+      <input type="password" name="password" placeholder="Senha" required />
+      <button type="submit">Entrar</button>
+    </form>
+    <p style="margin-top:15px;">Não tem conta? <a href="/register">Criar agora</a></p>
+  </div>
+</body>
+</html>

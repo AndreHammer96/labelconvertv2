@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Criar Conta — LabelConvert</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    body {
+      
+	  background: linear-gradient(135deg, #fff8f2, #fff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+    }
+    .register-container {
+      background: #fff;
+      color: #333;
+      padding: 40px;
+      border-radius: 16px;
+      width: 420px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .register-container h1 {
+      color: #ff6b00;
+      margin-bottom: 20px;
+    }
+    .register-container input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+    .register-container button {
+      background: #ff6b00;
+      color: #fff;
+      border: none;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      width: 100%;
+      transition: background 0.3s;
+    }
+    .register-container button:hover {
+      background: #e65c00;
+    }
+    .register-container a {
+      color: #ff6b00;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .register-container a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h1>Criar Conta</h1>
+    <p>Escolha seu plano e cadastre-se</p>
+    <form action="/register" method="post">
+      <input type="text" name="name" placeholder="Nome completo" required />
+      <input type="email" name="email" placeholder="E-mail" required />
+      <input type="password" name="password" placeholder="Senha" required />
+      <label for="plan">Plano:</label>
+      <select name="plan" id="plan">
+        <option value="free">Gratuito</option>
+        <option value="basic">Básico</option>
+        <option value="pro">Profissional</option>
+      </select>
+      <button type="submit">Criar Conta</button>
+    </form>
+    <p style="margin-top:15px;">Já tem conta? <a href="/login">Entrar</a></p>
+  </div>
+</body>
+</html>

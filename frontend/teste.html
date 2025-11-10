@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testar Conversão — LabelConvert</title>
+  <link rel="stylesheet" href="/static/style.css" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #fff8f2, #fff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .upload-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 40px 50px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 420px;
+      transition: transform 0.3s ease;
+    }
+
+    .upload-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .upload-card h2 {
+      color: #ff6b00;
+      margin-bottom: 10px;
+      font-size: 1.8rem;
+    }
+
+    .upload-card p {
+      color: #666;
+      margin-bottom: 25px;
+      font-size: 0.95rem;
+    }
+
+    input[type="file"] {
+      display: block;
+      width: 100%;
+      margin: 12px 0;
+      padding: 10px;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: border 0.3s;
+    }
+
+    input[type="file"]:hover {
+      border-color: #ff6b00;
+    }
+
+    button {
+      background: #ff6b00;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 8px;
+      width: 100%;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #e65c00;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 15px;
+      color: #444;
+      font-weight: 500;
+    }
+
+    .back-link {
+      margin-top: 25px;
+      display: inline-block;
+      color: #ff6b00;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="upload-card">
+    <h2>Conversor de Etiquetas</h2>
+    <p>Envie seu PDF e planilha Excel (.xlsx) para gerar as etiquetas automaticamente.</p>
+
+    <form id="uploadForm">
+      <input type="file" name="pdf" accept="application/pdf" required />
+      <input type="file" name="xlsx" accept=".xlsx" required />
+      <button type="submit">Converter e Baixar</button>
+    </form>
+
+    <p id="status"></p>
+
+    <a href="/" class="back-link">← Voltar ao início</a>
+  </div>
+
+  <script>
+    const form = document.getElementById("uploadForm");
+    const status = document.getElementById("status");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      status.textContent = "⏳ Gerando etiquetas, aguarde...";
+
+      try {
+        const response = await fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("Erro ao processar.");
+
+        // Baixa o PDF final
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "etiquetas_final.pdf";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        status.textContent = "✅ Arquivo gerado com sucesso!";
+      } catch (err) {
+        status.textContent = "❌ Erro ao gerar etiquetas.";
+      }
+    });
+  </script>
+</body>
+</html>
