@@ -23,19 +23,21 @@
       text-align: center;
       width: 420px;
       transition: transform 0.3s ease;
+      overflow-y: auto;
+      max-height: 95vh;
     }
 
     .upload-card:hover {
       transform: translateY(-4px);
     }
 
-    .upload-card h2 {
+    h2 {
       color: #ff6b00;
       margin-bottom: 10px;
       font-size: 1.8rem;
     }
 
-    .upload-card p {
+    p {
       color: #666;
       margin-bottom: 25px;
       font-size: 0.95rem;
@@ -91,21 +93,74 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    #preview {
+      display: block;
+      margin: 10px auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 400px;
+      height: 600px;
+      object-fit: contain;
+      background: #f8f8f8;
+    }
+
+    .small-btn {
+      width: 100%;
+      display: block;
+      margin-bottom: 8px;
+      padding: 8px 16px;
+      border-radius: 5px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    hr {
+      margin: 30px 0;
+      border: none;
+      border-top: 2px dashed #ddd;
+    }
   </style>
 </head>
 
 <body>
   <div class="upload-card">
-    <h2>Conversor de Etiquetas</h2>
-    <p>Envie seu PDF e planilha Excel (.xlsx) para gerar as etiquetas automaticamente.</p>
+    <!-- 🟠 SEÇÃO 1 - Geração de etiquetas -->
+    <section id="sectionConvertPDF">
+      <h2>Conversor de Etiquetas</h2>
+      <p>Envie seu PDF e planilha Excel (.xlsx) para gerar as etiquetas automaticamente.</p>
 
-    <form id="uploadForm">
-      <input type="file" name="pdf" accept="application/pdf" required />
-      <input type="file" name="xlsx" accept=".xlsx" required />
-      <button type="submit">Converter e Baixar</button>
-    </form>
+      <form id="uploadForm">
+        <input type="file" name="pdf" accept="application/pdf" required />
+        <input type="file" name="xlsx" accept=".xlsx" required />
+        <button type="submit">Converter e Baixar</button>
+      </form>
 
-    <p id="status"></p>
+      <p id="status"></p>
+    </section>
+
+    <hr />
+
+    <!-- 🟢 SEÇÃO 2 - Conversão para ZPL -->
+    <section id="sectionZPL">
+      <h2>Converter etiquetas para ZPL</h2>
+      <input type="file" id="file" />
+      <button id="btn">Converter para ZPL</button>
+
+      <div id="result" style="margin-top:20px;display:none;">
+        <h3>Prévia da primeira etiqueta:</h3>
+        <div id="zplBox" style="background:#1e1e1e;color:#ff6b00;font-family:monospace;padding:10px;height:200px;overflow:auto;white-space:pre;border-radius:8px;"></div>
+
+        <div style="margin-top:10px;">
+          <button id="copyBtn" class="small-btn" style="background:#ff7b00;color:#fff;">📋 Copiar código</button>
+          <button id="downloadAll" class="small-btn" style="background:#00b341;color:#fff;">💾 Baixar todas</button>
+        </div>
+
+        <h4 style="margin-top:20px;">Preview gerado:</h4>
+        <img id="preview" alt="Preview da etiqueta" />
+      </div>
+    </section>
 
     <a href="/" class="back-link">← Voltar ao início</a>
   </div>
@@ -120,14 +175,9 @@
       status.textContent = "⏳ Gerando etiquetas, aguarde...";
 
       try {
-        const response = await fetch("/upload", {
-          method: "POST",
-          body: formData,
-        });
-
+        const response = await fetch("/upload", { method: "POST", body: formData });
         if (!response.ok) throw new Error("Erro ao processar.");
 
-        // Baixa o PDF final
         const blob = await response.blob();
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -138,8 +188,90 @@
         status.textContent = "✅ Arquivo gerado com sucesso!";
       } catch (err) {
         status.textContent = "❌ Erro ao gerar etiquetas.";
+        console.error(err);
       }
     });
+
+    // ======================
+    // 🔸 GERAR ZPL E PREVIEW
+    // ======================
+    document.getElementById('btn').onclick = async () => {
+      const btn = document.getElementById('btn');
+      const fileInput = document.getElementById('file');
+      const file = fileInput.files[0];
+      if (!file) return alert('Selecione um arquivo PDF primeiro!');
+
+      btn.disabled = true;
+      const originalBtnText = btn.textContent;
+      btn.textContent = '⏳ Convertendo...';
+      btn.style.background = '#999';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const res = await fetch('/generate_zpl_image/', { method: 'POST', body: formData });
+        if (!res.ok) throw new Error(`Erro no backend (${res.status})`);
+        const data = await res.json();
+
+        const zpls = data.zpl;
+        if (!zpls || !zpls.length) throw new Error('Nenhum ZPL retornado!');
+
+        const firstZPL = zpls[0];
+        const zplBox = document.getElementById('zplBox');
+        const preview = document.getElementById('preview');
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.style.display = 'block';
+        zplBox.textContent = firstZPL.slice(0, 2000) + (firstZPL.length > 2000 ? '\n...\n(código truncado)' : '');
+
+        // Botão de copiar com feedback visual
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.onclick = async () => {
+          await navigator.clipboard.writeText(firstZPL);
+          copyBtn.textContent = '✅ Código copiado!';
+          copyBtn.style.background = '#00b341';
+          setTimeout(() => {
+            copyBtn.textContent = '📋 Copiar código';
+            copyBtn.style.background = '#ff7b00';
+          }, 2000);
+        };
+
+        // Baixar todas (concat)
+        const downloadAllBtn = document.getElementById('downloadAll');
+        downloadAllBtn.onclick = () => {
+          const blob = new Blob([zpls.join("\n")], { type: 'text/plain' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'etiquetas_todas.zpl';
+          link.click();
+        };
+
+        // Preview da primeira etiqueta (gerado pelo backend)
+        try {
+          const previewForm = new FormData();
+          previewForm.append('file', file);
+          const previewResponse = await fetch('/preview_zpl/', { method: 'POST', body: previewForm });
+          if (!previewResponse.ok) throw new Error("Erro ao gerar preview no servidor.");
+          const blob = await previewResponse.blob();
+          const blobUrl = URL.createObjectURL(blob);
+          preview.onload = () => URL.revokeObjectURL(blobUrl);
+          preview.src = blobUrl;
+          preview.style.display = 'block';
+        } catch (err) {
+          console.error("Erro ao gerar preview:", err);
+          preview.src = "";
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert('Erro durante a conversão — veja o console para detalhes.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalBtnText;
+        btn.style.background = '';
+      }
+    };
   </script>
 </body>
 </html>
