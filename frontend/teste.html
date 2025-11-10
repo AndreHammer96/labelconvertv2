@@ -121,6 +121,31 @@
       border: none;
       border-top: 2px dashed #ddd;
     }
+	
+	::-webkit-scrollbar {
+	  width: 10px;
+	}
+
+	::-webkit-scrollbar-track {
+	  background: #fff2e6; /* fundo clarinho */
+	  border-radius: 10px;
+	}
+
+	::-webkit-scrollbar-thumb {
+	  background-color: #ff6b00; /* cor da marca */
+	  border-radius: 10px;
+	  border: 2px solid #fff2e6; /* contorno suave */
+	}
+
+	::-webkit-scrollbar-thumb:hover {
+	  background-color: #e65c00; /* tom mais escuro ao passar o mouse */
+	}
+
+	/* Firefox */
+	* {
+	  scrollbar-width: thin;
+	  scrollbar-color: #ff6b00 #fff2e6;
+	}
   </style>
 </head>
 
