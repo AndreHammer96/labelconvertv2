@@ -1,16 +1,7 @@
 fastapi
 uvicorn[standard]
-PyPDF2>=3.0.0
-reportlab
-pandas
-openpyxl
 SQLAlchemy
 python-multipart
-fastapi
-PyPDF2>=3.0.0
-reportlab
-pandas
-openpyxl
 jinja2
 passlib[bcrypt]
 python-jose[cryptography]
@@ -18,3 +9,7 @@ python-dateutil
 pdf2image
 pillow
 requests
+pandas
+openpyxl
+reportlab
+PyPDF2>=3.0.0
